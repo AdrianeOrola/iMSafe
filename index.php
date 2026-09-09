@@ -1,7 +1,7 @@
 <?php declare(strict_types=1); require __DIR__ . '/config.php'; ?>
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>iMSafe v2.0 Disaster Monitoring</title><meta name="description" content="iMSafe v2.0 turns community observations into response-ready incident records."><link rel="stylesheet" href="assets/app.css?v=7"><link rel="stylesheet" href="assets/navigation.css?v=9"><link rel="stylesheet" href="assets/home.css?v=9"><link rel="stylesheet" href="assets/atmosphere.css?v=7"><link rel="stylesheet" href="assets/imassist.css?v=2"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>iMSafe v2.0 Disaster Monitoring</title><meta name="description" content="iMSafe v2.0 turns community observations into response-ready incident records."><link rel="stylesheet" href="assets/app.css?v=7"><link rel="stylesheet" href="assets/navigation.css?v=9"><link rel="stylesheet" href="assets/home.css?v=9"><link rel="stylesheet" href="assets/atmosphere.css?v=7"><link rel="stylesheet" href="assets/imassist.css?v=5"></head>
 <body class="public-body home-body">
 <?php require __DIR__ . '/partials/header.php'; ?>
 <main id="main-content" tabindex="-1">

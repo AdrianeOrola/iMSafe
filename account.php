@@ -61,7 +61,7 @@ $myReports = $mode === 'reports' && $user ? app()->incidents->forUser((int)$user
 ?>
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?= $mode === 'signup' ? 'Create account' : ($mode === 'reports' ? 'My reports' : 'Login') ?> · iMSafe v2.0</title><link rel="stylesheet" href="assets/app.css?v=5"><link rel="stylesheet" href="assets/navigation.css?v=9"><link rel="stylesheet" href="assets/dashboard.css?v=7"><link rel="stylesheet" href="assets/atmosphere.css?v=5"><link rel="stylesheet" href="assets/imassist.css?v=2"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title><?= $mode === 'signup' ? 'Create account' : ($mode === 'reports' ? 'My reports' : 'Login') ?> · iMSafe v2.0</title><link rel="stylesheet" href="assets/app.css?v=5"><link rel="stylesheet" href="assets/navigation.css?v=9"><link rel="stylesheet" href="assets/dashboard.css?v=7"><link rel="stylesheet" href="assets/atmosphere.css?v=5"><link rel="stylesheet" href="assets/imassist.css?v=5"></head>
 <body class="public-body">
 <?php require __DIR__ . '/partials/header.php'; ?>
 <main id="main-content" tabindex="-1" class="dashboard-gate">

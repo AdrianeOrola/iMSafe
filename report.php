@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rapid Assessment · iMSafe v2.0</title>
   <link rel="stylesheet" href="assets/app.css?v=12"><link rel="stylesheet" href="assets/navigation.css?v=9">
-<link rel="stylesheet" href="assets/atmosphere.css?v=5"><link rel="stylesheet" href="assets/imassist.css?v=2"></head>
+<link rel="stylesheet" href="assets/atmosphere.css?v=5"><link rel="stylesheet" href="assets/imassist.css?v=5"></head>
 <body class="public-body">
 <?php require __DIR__ . '/partials/header.php'; ?>
 <main id="main-content" tabindex="-1" class="assessment-layout">

@@ -13,7 +13,28 @@ const path = require('node:path');
     const page = await context.newPage();
     await page.goto(base + 'index.php');
     assert.equal(await page.locator('#imassistLauncher').isVisible(), true);
+    const launcherShape = await page.locator('#imassistLauncher').evaluate(element => {
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      const tail = getComputedStyle(element, '::after');
+      const inner = getComputedStyle(element.querySelector('.imassist-bot-bubble'));
+      return {
+        width: rect.width,
+        height: rect.height,
+        radius: parseFloat(style.borderTopLeftRadius),
+        borderWidth: parseFloat(style.borderTopWidth),
+        tailContent: tail.content,
+        innerBorderWidth: parseFloat(inner.borderTopWidth),
+      };
+    });
+    assert.ok(launcherShape.width > launcherShape.height && launcherShape.width <= 84, 'iMAssist launcher must use a compact oval chat-bubble shape.');
+    assert.ok(launcherShape.radius >= launcherShape.height / 2 - 2 && launcherShape.borderWidth >= 5, 'The launcher itself must be the rounded blue speech-bubble ring.');
+    assert.notEqual(launcherShape.tailContent, 'none', 'The launcher must include a speech-bubble tail.');
+    assert.equal(launcherShape.innerBorderWidth, 0, 'The robot must not sit inside another box or bubble.');
+    assert.equal(await page.locator('#imassistLauncher .imassist-bot-bubble').count(), 1, 'iMAssist launcher must include the message bubble.');
+    assert.equal(await page.locator('#imassistLauncher .imassist-bot-head').count(), 1, 'iMAssist launcher must include the robot face.');
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'iMAssist launcher causes horizontal overflow.');
+    await page.locator('#imassistLauncher').screenshot({ path: path.join(output, 'imassist-chat-head.png') });
 
     await page.locator('#imassistLauncher').click();
     assert.equal(await page.locator('#imassistDialog').isVisible(), true);
@@ -64,6 +85,8 @@ const path = require('node:path');
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('#imassistDialog').isHidden(), true);
     await page.setViewportSize({ width: 1440, height: 1000 });
+    await page.locator('#imassistLauncher').hover();
+    await page.screenshot({ path: path.join(output, 'imassist-chat-head-tooltip.png') });
     await page.locator('#imassistLauncher').click();
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), 'iMAssist panel causes horizontal overflow.');
     await page.locator('#imassistDialog').screenshot({ path: path.join(output, 'imassist-desktop.png') });

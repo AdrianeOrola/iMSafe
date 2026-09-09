@@ -1,6 +1,27 @@
-.imassist-launcher { position: fixed; z-index: 48; right: 24px; bottom: 24px; display: flex; align-items: center; gap: 10px; min-height: 58px; padding: 8px 16px 8px 9px; border: 1px solid #ffc879; border-radius: 10px; background: #ffac58; color: #112b36; box-shadow: 0 14px 36px rgba(3, 22, 31, .3); cursor: pointer; font: 700 1rem/1.15 var(--body-font); text-align: left; }
-.imassist-launcher:hover { background: #ffc06f; transform: translateY(-1px); }
-.imassist-launcher small { display: block; margin-top: 3px; color: #465860; font-size: .75rem; font-weight: 600; }
+.imassist-launcher { position: fixed; z-index: 48; right: 24px; bottom: 28px; display: grid; box-sizing: border-box; width: 80px; height: 72px; min-height: 72px; padding: 0; place-items: center; overflow: visible; border: 6px solid #3549d8; border-radius: 50%; background: #f7f8fa; color: #112b36; box-shadow: 0 14px 34px rgba(4, 36, 47, .3), inset 0 1px 0 rgba(255, 255, 255, .9); cursor: pointer; font: 700 1rem/1.15 var(--body-font); transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease; }
+.imassist-launcher::after { content: ""; position: absolute; z-index: -1; left: -7px; bottom: -10px; width: 24px; height: 22px; background: #3549d8; clip-path: polygon(16% 0, 100% 0, 0 100%); transform: rotate(-6deg); }
+.imassist-launcher:hover { border-color: #263bc9; box-shadow: 0 18px 38px rgba(4, 36, 47, .34), inset 0 1px 0 rgba(255, 255, 255, .9); transform: translateY(-2px); }
+.imassist-launcher:hover::after { background: #263bc9; }
+.imassist-launcher:active { transform: scale(.96); }
+.imassist-bot-bubble { position: relative; display: grid; width: 100%; height: 100%; place-items: center; border: 0; border-radius: inherit; background: transparent; }
+.imassist-bot { position: relative; z-index: 1; display: block; width: 43px; height: 45px; margin-top: 3px; }
+.imassist-bot-head { position: absolute; z-index: 3; top: 10px; left: 3px; width: 37px; height: 24px; border: 2px solid #182e3c; border-radius: 11px 11px 13px 13px; background: #102a39; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .14); }
+.imassist-bot-head::before { content: ""; position: absolute; left: 4px; top: -9px; width: 25px; height: 10px; border: 3px solid #8796a3; border-bottom: 0; border-radius: 16px 16px 0 0; }
+.imassist-bot-ear { position: absolute; z-index: 2; top: 16px; width: 7px; height: 15px; border-radius: 5px; background: #aab5c1; box-shadow: inset 0 -2px 0 rgba(63, 79, 94, .14); }
+.imassist-bot-ear-left { left: 0; }
+.imassist-bot-ear-right { right: 0; }
+.imassist-bot-eye { position: absolute; top: 8px; width: 7px; height: 6px; border-radius: 7px 7px 4px 4px; background: #69dfe1; }
+.imassist-bot-eye-left { left: 7px; }
+.imassist-bot-eye-right { right: 7px; }
+.imassist-bot-mouth { position: absolute; left: 50%; bottom: 4px; width: 7px; height: 3px; border-radius: 0 0 6px 6px; background: #69dfe1; transform: translateX(-50%); }
+.imassist-bot-body { position: absolute; z-index: 1; left: 9px; bottom: 0; width: 25px; height: 16px; border-radius: 13px 13px 7px 7px; background: #e1e6ec; box-shadow: inset 0 -2px 0 #d1d8e0; }
+.imassist-bot-body::before { content: ""; position: absolute; left: 8px; top: -5px; width: 9px; height: 7px; border-radius: 3px; background: #c9d1da; }
+.imassist-launcher-label { position: absolute; right: calc(100% + 12px); bottom: 5px; width: max-content; min-width: 154px; padding: 9px 12px; border: 1px solid #3d5d6b; border-radius: 9px; background: #0c263b; color: #f1f8fb; box-shadow: 0 10px 26px rgba(3, 22, 31, .28); opacity: 0; visibility: hidden; transform: translateX(6px); transition: opacity 150ms ease, transform 150ms ease, visibility 150ms ease; pointer-events: none; text-align: left; }
+.imassist-launcher-label::after { content: ""; position: absolute; right: -6px; bottom: 16px; width: 11px; height: 11px; border-top: 1px solid #3d5d6b; border-right: 1px solid #3d5d6b; background: #0c263b; transform: rotate(45deg); }
+.imassist-launcher-label strong, .imassist-launcher-label small { display: block; }
+.imassist-launcher-label strong { font-size: .9rem; line-height: 1.2; }
+.imassist-launcher-label small { margin-top: 3px; color: #bfd2db; font-size: .72rem; font-weight: 600; }
+.imassist-launcher:hover .imassist-launcher-label, .imassist-launcher:focus-visible .imassist-launcher-label { opacity: 1; visibility: visible; transform: translateX(0); }
 .imassist-mark { display: grid; flex: 0 0 38px; width: 38px; height: 38px; place-items: center; border-radius: 8px; background: #0c263b; color: #77e0e1; font: 600 1.1rem/1 var(--display-font); letter-spacing: -.02em; }
 .imassist-dialog { position: fixed; z-index: 70; inset: auto 24px 94px auto; width: min(420px, calc(100% - 32px)); height: min(680px, calc(100dvh - 120px)); max-width: none; max-height: none; margin: 0; padding: 0; overflow: hidden; border: 1px solid #436272; border-radius: 12px; background: #f6faf9; color: #102b39; box-shadow: 0 24px 80px rgba(2, 18, 27, .46); }
 .imassist-dialog[open] { display: grid; grid-template-rows: auto auto minmax(150px, 1fr) auto auto auto; }
@@ -41,11 +62,13 @@
 .imassist-dialog button:focus-visible, .imassist-dialog a:focus-visible, .imassist-launcher:focus-visible, .imassist-dialog textarea:focus-visible { outline: 3px solid #f49b3e; outline-offset: 2px; }
 .imassist-open .imassist-launcher { visibility: hidden; }
 @media (max-width: 600px) {
-  .imassist-launcher { right: 14px; bottom: 14px; min-height: 54px; padding-right: 12px; }
+  .imassist-launcher { right: 14px; bottom: 20px; width: 70px; height: 64px; min-height: 64px; border-radius: 50%; }
+  .imassist-bot { transform: scale(.9); }
+  .imassist-launcher-label { display: none; }
   .imassist-dialog { inset: 8px; width: auto; height: calc(100dvh - 16px); }
   .imassist-dialog[open] { grid-template-rows: auto auto minmax(120px, 1fr) auto auto auto; }
   .imassist-message { max-width: 92%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .imassist-launcher, .imassist-messages { transition: none; scroll-behavior: auto; }
+  .imassist-launcher, .imassist-launcher-label, .imassist-messages { transition: none; scroll-behavior: auto; }
 }

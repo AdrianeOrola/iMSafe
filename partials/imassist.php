@@ -1,6 +1,17 @@
-<button id="imassistLauncher" class="imassist-launcher" type="button" aria-controls="imassistDialog" aria-haspopup="dialog">
-  <span class="imassist-mark" aria-hidden="true">iA</span>
-  <span><strong>iMAssist</strong><small>Disaster information</small></span>
+<button id="imassistLauncher" class="imassist-launcher" type="button" aria-controls="imassistDialog" aria-haspopup="dialog" aria-label="Open iMAssist disaster information assistant">
+  <span class="imassist-bot-bubble" aria-hidden="true">
+    <span class="imassist-bot">
+      <span class="imassist-bot-ear imassist-bot-ear-left"></span>
+      <span class="imassist-bot-ear imassist-bot-ear-right"></span>
+      <span class="imassist-bot-head">
+        <span class="imassist-bot-eye imassist-bot-eye-left"></span>
+        <span class="imassist-bot-eye imassist-bot-eye-right"></span>
+        <span class="imassist-bot-mouth"></span>
+      </span>
+      <span class="imassist-bot-body"></span>
+    </span>
+  </span>
+  <span class="imassist-launcher-label" aria-hidden="true"><strong>iMAssist</strong><small>Disaster information</small></span>
 </button>
 <dialog id="imassistDialog" class="imassist-dialog" aria-labelledby="imassistTitle">
   <header class="imassist-header">
