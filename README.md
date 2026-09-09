@@ -82,9 +82,7 @@ The report is **not** stored in a single table. The primary `incidents` record o
 
 ## Live Data APIs
 
-All third-party calls happen **server side** through `api.php`; browser code never receives provider credentials or calls providers directly. Location routes return provider metadata and a last-updated value. The location service caches successful values for 24 hours and falls back automatically from PSGC GitLab to the code-compatible PSGC Community API. Weather and advisory refresh requests are separately bounded so provider failures cannot hold the interface open indefinitely.
-
-The Announcements page uses cache-first PAGASA and GDACS reads, so an unavailable provider does not block page rendering. Provider caches are considered fresh for five minutes. The browser checks both sources asynchronously after the page is usable; stale information remains clearly labeled until a refresh succeeds. Cold or stale provider refreshes use a four-second timeout, a non-blocking refresh lock, and a one-minute retry backoff to prevent request pileups.
+All third-party calls happen **server side** through `api.php`; browser code never receives provider credentials or calls providers directly. Location routes return provider metadata and a last-updated value. The location service caches successful values for 24 hours and falls back automatically from PSGC GitLab to the code-compatible PSGC Community API. The weather route uses a dedicated 12-second bounded request because the official DOST-PAGASA weather page can take longer than the location endpoints.
 
 | Local endpoint | External source | Use |
 | --- | --- | --- |
@@ -131,7 +129,6 @@ The providers are community-maintained PSGC datasets, not a guarantee of the lat
 
 - Syntax: run `php -l` for every PHP source; `node --check assets/app.js`, `node --check assets/navigation.js`, and `node --check assets/imassist.js`.
 - iMAssist tests: run `php tests/imassist-service.php` for emergency bypass, disaster-only scope, privacy, trusted sources, safe actions, and fallback behavior. Run `node tests/imassist-smoke.cjs` for endpoint validation, keyboard behavior, global route coverage, safety responses, and responsive layouts.
-- Provider performance tests: run `php tests/provider-cache-performance.php` for fresh and stale cache-only behavior. Run `node tests/announcements-performance.cjs` to confirm that Announcements renders before its asynchronous provider refresh completes.
 - Export tests: run `php tests/report-export.php` for flood-range, CSV-safety, XLSX structure/style, and PDF pagination checks. Run `php tests/export-database-read.php` to generate all export formats from the current database without modifying records.
 - Location tests: start `php -S 127.0.0.1:8015 tests/provider-router.php`, then `php tests/location-service.php`. Fixtures test parent validation, tampered names, secondary-provider formats, malformed/empty/partial data, outages, and stale caching without touching the application database.
 - Browser tests: install Playwright externally or as a development dependency and set `IMSAFE_PLAYWRIGHT_PATH` to its module directory. `node tests/ui-smoke.cjs` checks public routes, mobile menu, 320/390/720/1440px layouts, Cavite/NCR, provider retry, and rejected-form restoration. Chrome must be installed. Set `IMSAFE_TEST_URL` when testing another local URL.

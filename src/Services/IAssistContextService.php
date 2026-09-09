@@ -37,7 +37,7 @@ final class IAssistContextService implements IAssistContextProvider
         if ($weatherRequested) {
             $providerAttempted = true;
             try {
-                $weather = $this->pagasa->current(false);
+                $weather = $this->pagasa->current();
                 $facts['pagasa'] = $this->safePagasa($weather);
                 $cached = !empty($weather['fromCache']);
                 $unavailable = !empty($weather['unavailable']);
@@ -58,7 +58,7 @@ final class IAssistContextService implements IAssistContextProvider
         if ($advisoryRequested) {
             $providerAttempted = true;
             try {
-                $advisories = $this->advisories->current(false);
+                $advisories = $this->advisories->current();
                 $items = array_values(array_filter((array)($advisories['items'] ?? []), 'is_array'));
                 $philippineItems = array_values(array_filter($items, static fn(array $item): bool => stripos((string)($item['title'] ?? ''), 'philippin') !== false));
                 $facts['gdacs'] = [

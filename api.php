@@ -20,10 +20,6 @@ try {
         json_response(app()->locations->municipalities($region, $province));
     }
     if ($action === 'barangays') json_response(app()->locations->barangays($code('municipality')));
-    if (in_array($action, ['pagasa', 'advisories'], true) && !rate_limit('provider-feed-' . $action, 30, 60)) {
-        header('Retry-After: 60');
-        json_response(['error' => 'Provider refresh limit reached. Saved announcements remain available.'], 429);
-    }
     if($action==='pagasa') json_response(['brief'=>app()->pagasa->current(),'refreshedAt'=>gmdate(DATE_ATOM)]);
     if($action==='advisories') json_response(app()->advisories->current());
     if(in_array($action,['analytics','reports'],true)){ if(!is_admin()) json_response(['error'=>'Operations sign-in is required.'],403); json_response($action==='analytics'?app()->incidents->analytics():['items'=>app()->incidents->all()]); }

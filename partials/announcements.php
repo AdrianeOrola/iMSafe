@@ -1,13 +1,11 @@
 <?php
 $pagasaUnavailable = !empty($pagasa['unavailable']);
 $pagasaCached = !$pagasaUnavailable && !empty($pagasa['fromCache']);
-$pagasaStale = $pagasaCached && !empty($pagasa['stale']);
-$pagasaState = $pagasaUnavailable ? 'Unavailable' : ($pagasaCached ? ($pagasaStale ? 'Older cached copy' : 'Recent cached copy') : 'Source reached');
+$pagasaState = $pagasaUnavailable ? 'Unavailable' : ($pagasaCached ? 'Cached copy' : 'Source reached');
 $pagasaStateClass = $pagasaUnavailable ? 'unavailable' : ($pagasaCached ? 'cached' : 'available');
 $gdacsUnavailable = !empty($advisories['unavailable']);
 $gdacsCached = !$gdacsUnavailable && !empty($advisories['fromCache']);
-$gdacsStale = $gdacsCached && !empty($advisories['stale']);
-$gdacsState = $gdacsUnavailable ? 'Unavailable' : ($gdacsCached ? ($gdacsStale ? 'Older cached copy' : 'Recent cached copy') : 'Source reached');
+$gdacsState = $gdacsUnavailable ? 'Unavailable' : ($gdacsCached ? 'Cached copy' : 'Source reached');
 $gdacsStateClass = $gdacsUnavailable ? 'unavailable' : ($gdacsCached ? 'cached' : 'available');
 $gdacsItems = $advisories['items'] ?? [];
 $philippineSignals = count(array_filter($gdacsItems, static fn(array $item): bool => stripos((string)($item['title'] ?? ''), 'philippin') !== false));
@@ -23,7 +21,7 @@ $formatSourceTime = static function (?string $value): string {
 <main id="main-content" tabindex="-1" class="announcements-shell">
   <header class="announcements-intro">
     <div><h1>Official-source announcements</h1><p>Latest available weather and hazard information from official government and international disaster sources.</p></div>
-    <div class="announcement-actions"><span>Page opened <?= h($checkedAt) ?> PHT</span><span id="sourceRefreshStatus" role="status" aria-live="polite">Showing saved data immediately. Checking official feeds in the background.</span><a id="refreshSources" href="announcements.php">Refresh sources</a></div>
+    <div class="announcement-actions"><span>Last checked <?= h($checkedAt) ?> PHT</span><span>Refresh to check the official feeds again</span><a href="announcements.php">Refresh sources</a></div>
   </header>
 
   <section class="source-assurance" aria-label="Source policy">
