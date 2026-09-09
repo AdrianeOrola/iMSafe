@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-05T06:40:36.993Z",
+  "title": "Design System: iMSafe",
+  "extensions": {
+    "motion": [
+      {
+        "name": "control-color",
+        "value": "160ms ease",
+        "purpose": "Hover color changes; disabled under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "navigation",
+        "value": "1120px"
+      },
+      {
+        "name": "single-column",
+        "value": "960px"
+      },
+      {
+        "name": "phone",
+        "value": "540px"
+      }
+    ],
+    "shadows": []
+  },
+  "components": [
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Assessment submission and sign-in.",
+      "html": "<button class=\"ds-button\">Submit assessment</button>",
+      "css": ".ds-button{background:var(--teal);color:white;border:0;border-radius:7px;min-height:50px;padding:13px 22px;font:700 16px system-ui;cursor:pointer}.ds-button:hover{background:#054e48}.ds-button:focus-visible{outline:3px solid #b05d00;outline-offset:4px}"
+    },
+    {
+      "name": "Report entry",
+      "kind": "button",
+      "description": "Persistent report entry in navigation.",
+      "html": "<a class=\"ds-report\" href=\"report.php\">Report emergency</a>",
+      "css": ".ds-report{display:inline-block;background:var(--signal);color:var(--ink);padding:12px 18px;border-radius:6px;font:700 16px system-ui;text-decoration:none}.ds-report:hover{background:#ffc166}.ds-report:focus-visible{outline:3px solid #b05d00;outline-offset:4px}"
+    },
+    {
+      "name": "Text input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Readable native input.",
+      "html": "<label class=\"ds-label\">Your name<input class=\"ds-input\" placeholder=\"Optional\"></label>",
+      "css": ".ds-label{font:600 16px system-ui;color:var(--ink)}.ds-input{box-sizing:border-box;display:block;width:100%;min-height:50px;margin-top:8px;border:1px solid #92a3a8;border-radius:7px;padding:11px 12px;font:16px system-ui;background:white;color:var(--ink)}.ds-input:focus-visible{outline:3px solid #b05d00;outline-offset:4px}"
+    },
+    {
+      "name": "Navigation link",
+      "kind": "nav",
+      "description": "Text-first route navigation.",
+      "html": "<a class=\"ds-nav\" href=\"track.php\">Track report</a>",
+      "css": ".ds-nav{display:inline-block;padding:12px;color:var(--teal);font:600 16px system-ui;text-decoration:none}.ds-nav:hover{text-decoration:underline}.ds-nav:focus-visible{outline:3px solid #b05d00;outline-offset:4px}"
+    },
+    {
+      "name": "Severity chip",
+      "kind": "chip",
+      "description": "Color is always paired with a written state.",
+      "html": "<span class=\"ds-chip\">Red</span>",
+      "css": ".ds-chip{display:inline-block;border-radius:6px;padding:4px 10px;background:#ffe9eb;color:var(--red);font:600 14px system-ui}"
+    },
+    {
+      "name": "Task panel",
+      "kind": "card",
+      "description": "Quiet bordered task container.",
+      "html": "<section class=\"ds-panel\">Incident intake</section>",
+      "css": ".ds-panel{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:32px;font:600 20px system-ui}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Emergency field guide",
+    "overview": "The user delegated a disaster-related redesign while preserving content. Condensed signage-like headings give identity; plain reading text and native controls keep the reporting task familiar.",
+    "keyCharacteristics": [
+      "readable controls",
+      "strong task hierarchy",
+      "restrained alert colors",
+      "shared navigation",
+      "quiet form surfaces"
+    ],
+    "rules": [
+      {
+        "name": "The Reading Rule",
+        "body": "Never shrink input text to fit a column. Reflow the layout.",
+        "section": "typography"
+      }
+    ],
+    "dos": [
+      "Do preserve text, routes, reporting behavior, and severity labels.",
+      "Do keep critical controls at readable sizes on phones."
+    ],
+    "donts": [
+      "Don't reintroduce gradient text, tiny form fonts, or decorative motion in the assessment."
+    ]
+  }
+}

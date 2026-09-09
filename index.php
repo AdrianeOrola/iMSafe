@@ -1,0 +1,26 @@
+<?php declare(strict_types=1); require __DIR__ . '/config.php'; ?>
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>iMSafe v2.0 Disaster Monitoring</title><meta name="description" content="iMSafe v2.0 turns community observations into response-ready incident records."><link rel="stylesheet" href="assets/app.css?v=7"><link rel="stylesheet" href="assets/navigation.css?v=9"><link rel="stylesheet" href="assets/home.css?v=9"><link rel="stylesheet" href="assets/atmosphere.css?v=7"><link rel="stylesheet" href="assets/imassist.css?v=2"></head>
+<body class="public-body home-body">
+<?php require __DIR__ . '/partials/header.php'; ?>
+<main id="main-content" tabindex="-1">
+  <section class="bulletin-hero"><div class="bulletin-topline"><span></span><time><?= h(date('D · M d, Y')) ?></time></div><div class="bulletin-grid"><div class="bulletin-title"><p class="home-kicker">Community safety, organized</p><h1>When minutes<br> matter, <span>report<br> with clarity.</span></h1><p>iMSafe v2.0 turns local observations into response-ready incident records. Choose the right alert context, pinpoint the barangay, and keep a public reference for every update.</p><div class="bulletin-actions"><a class="primary-action" href="report.php"><span>Start a rapid report</span><b aria-hidden="true">→</b></a><a class="secondary-action" href="track.php">Track a report <b aria-hidden="true">↗</b></a></div></div><figure class="response-gallery">
+  <div class="gallery-stage">
+    <img class="gallery-photo is-active" src="assets/images/calamity-fire.jpg" width="1280" height="790" data-hazard="Fire" alt="Archive photo: flames spreading through a forest beside the Bitterroot River, Montana, 2000." fetchpriority="high">
+    <img class="gallery-photo" src="assets/images/calamity-earthquake.jpg" width="1280" height="850" data-hazard="Earthquake" alt="Archive photo: a collapsed freeway interchange after the Northridge earthquake, California, 1994." aria-hidden="true">
+    <img class="gallery-photo" src="assets/images/calamity-flood.jpg" width="1280" height="851" data-hazard="Flood" alt="Archive photo: floodwater submerging roads and traffic lights in Missouri, 2008." aria-hidden="true">
+    <img class="gallery-photo" src="assets/images/calamity-typhoon.png" width="1280" height="1792" data-hazard="Typhoon" alt="Archive satellite image: the eye and spiral clouds of Typhoon Haiyan approaching the Philippines, November 2013." aria-hidden="true">
+    <img class="gallery-photo" src="assets/images/calamity-volcanic.jpg" width="640" height="427" data-hazard="Volcanic eruption" alt="Archive photo: an immense ash cloud from Mount Pinatubo's eruption, seen from Clark Air Base, Philippines, June 1991." aria-hidden="true">
+    <img class="gallery-photo" src="assets/images/calamity-landslide.jpg" width="1280" height="834" data-hazard="Landslide" alt="Archive aerial photo: a collapsed hillside and debris path after the Oso landslide, Washington, 2014." aria-hidden="true">
+    <img class="gallery-photo" src="assets/images/calamity-tsunami.jpg" width="640" height="464" data-hazard="Tsunami" alt="Archive photo: a tsunami wave surging past palm trees along the coast in Ao Nang, Thailand, December 2004." aria-hidden="true">
+    <div class="gallery-caption"><span class="gallery-hazard">Fire</span><strong>Prepared communities.<br>Coordinated response.</strong></div>
+  </div>
+</figure></div><div class="hero-route" aria-label="Response journey"><div class="route-track"><div class="route-sequence"><span><b>01</b> Observe</span><i aria-hidden="true"></i><span><b>02</b> Report</span><i aria-hidden="true"></i><span><b>03</b> Coordinate</span><i aria-hidden="true"></i><span><b>04</b> Track</span><i aria-hidden="true"></i></div><div class="route-sequence" aria-hidden="true"><span><b>01</b> Observe</span><i></i><span><b>02</b> Report</span><i></i><span><b>03</b> Coordinate</span><i></i><span><b>04</b> Track</span><i></i></div></div></div></section>
+  <section class="response-lanes"><div class="lanes-header"><div><p class="section-kicker">Built for local response</p><h2>One clear path from<br> community signal to action.</h2></div><p>Every detail is organized for faster review. You remain in control of what you share, while authorized local teams receive the location and context they need.</p></div><div class="lane-grid"><article class="lane-card locate"><span>01</span><h3>Locate precisely</h3><p>Choose a region, province, municipality or city, and barangay from the Philippine reference cascade.</p><a href="report.php">Open rapid report →</a></article><article class="lane-card classify"><span>02</span><h3>Classify conditions</h3><p>Green, Orange, and Red protocols adapt the questions to the current community situation.</p><a href="report.php">Choose an alert level →</a></article><article class="lane-card coordinate"><span>03</span><h3>Coordinate response</h3><p>Authorized teams monitor incoming reports, assign response teams, and publish clear progress updates.</p><a href="account.php?mode=login">Administrator sign in →</a></article></div></section>
+</main>
+
+<?php require __DIR__ . '/partials/footer.php'; ?>
+<script src="assets/home.js?v=8" defer></script>
+</body>
+</html>

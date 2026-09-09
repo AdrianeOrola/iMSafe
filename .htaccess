@@ -1,0 +1,3 @@
+# Local XAMPP administrator credentials. Apache does not serve .htaccess files.
+SetEnv IMSAFE_ADMIN_EMAIL "admin@gmail.com"
+SetEnv IMSAFE_ADMIN_PASSWORD "Admin10?"

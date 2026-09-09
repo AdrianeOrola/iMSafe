@@ -1,0 +1,218 @@
+{
+  "checks": [
+    {
+      "route": "index.php",
+      "width": 1440,
+      "scroll": 1440,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "17px",
+      "inputFonts": []
+    },
+    {
+      "route": "report.php",
+      "width": 1440,
+      "scroll": 1440,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "17px",
+      "inputFonts": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "route": "track.php",
+      "width": 1440,
+      "scroll": 1440,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "17px",
+      "inputFonts": [
+        16
+      ]
+    },
+    {
+      "route": "announcements.php",
+      "width": 1440,
+      "scroll": 1440,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "17px",
+      "inputFonts": []
+    },
+    {
+      "route": "account.php?mode=login",
+      "width": 1440,
+      "scroll": 1440,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "17px",
+      "inputFonts": [
+        16,
+        16
+      ]
+    },
+    {
+      "route": "account.php?mode=signup",
+      "width": 1440,
+      "scroll": 1440,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "17px",
+      "inputFonts": [
+        16,
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "route": "dashboard.php",
+      "width": 1440,
+      "scroll": 1440,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "17px",
+      "inputFonts": [
+        16,
+        16
+      ]
+    },
+    {
+      "route": "index.php",
+      "width": 390,
+      "scroll": 390,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "16px",
+      "inputFonts": []
+    },
+    {
+      "route": "report.php",
+      "width": 390,
+      "scroll": 390,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "16px",
+      "inputFonts": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "route": "track.php",
+      "width": 390,
+      "scroll": 390,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "16px",
+      "inputFonts": [
+        16
+      ]
+    },
+    {
+      "route": "announcements.php",
+      "width": 390,
+      "scroll": 390,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "16px",
+      "inputFonts": []
+    },
+    {
+      "route": "account.php?mode=login",
+      "width": 390,
+      "scroll": 390,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "16px",
+      "inputFonts": [
+        16,
+        16
+      ]
+    },
+    {
+      "route": "account.php?mode=signup",
+      "width": 390,
+      "scroll": 390,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "16px",
+      "inputFonts": [
+        16,
+        16,
+        16,
+        16
+      ]
+    },
+    {
+      "route": "dashboard.php",
+      "width": 390,
+      "scroll": 390,
+      "header": 1,
+      "footer": 1,
+      "bodyFont": "16px",
+      "inputFonts": [
+        16,
+        16
+      ]
+    }
+  ],
+  "javascriptErrors": [],
+  "cascade": "Cavite and NCR passed",
+  "restoration": "passed",
+  "retry": "passed"
+}
