@@ -6,9 +6,21 @@ use ImSafe\Support\Database;
 
 final class AccountRepository {
     public function __construct(private Database $database) {}
-    public function create(string $name, string $email, string $password): array {
-        $stmt = $this->database->pdo()->prepare('INSERT INTO local_users (display_name,email,password_hash) VALUES (?,?,?)');
-        $stmt->execute([$name, strtolower($email), password_hash($password, PASSWORD_DEFAULT)]);
+    public function create(string $name, string $email, string $password, array $profile): array {
+        $stmt = $this->database->pdo()->prepare('INSERT INTO local_users (display_name,email,password_hash,region,province,city_municipality,barangay,house_street,nearby_landmark,primary_contact,alternate_contact) VALUES (?,?,?,?,?,?,?,?,?,?,?)');
+        $stmt->execute([
+            $name,
+            strtolower($email),
+            password_hash($password, PASSWORD_DEFAULT),
+            $profile['region'],
+            $profile['province'],
+            $profile['cityMunicipality'],
+            $profile['barangay'],
+            $profile['houseStreet'] ?: null,
+            $profile['nearbyLandmark'] ?: null,
+            $profile['primaryContact'],
+            $profile['alternateContact'] ?: null,
+        ]);
         return ['id' => (int)$this->database->pdo()->lastInsertId(), 'name' => $name, 'email' => strtolower($email)];
     }
     public function authenticate(string $email, string $password): ?array {
@@ -17,5 +29,10 @@ final class AccountRepository {
         if (!$user || !password_verify($password, $user['password_hash'])) return null;
         $this->database->pdo()->prepare('UPDATE local_users SET last_signed_in=NOW() WHERE id=?')->execute([$user['id']]);
         return ['id' => (int)$user['id'], 'name' => $user['display_name'], 'email' => $user['email']];
+    }
+    public function profile(int $id): ?array {
+        $stmt = $this->database->pdo()->prepare('SELECT id,display_name,email,region,province,city_municipality,barangay,house_street,nearby_landmark,primary_contact,alternate_contact FROM local_users WHERE id=? LIMIT 1');
+        $stmt->execute([$id]);
+        return $stmt->fetch() ?: null;
     }
 }

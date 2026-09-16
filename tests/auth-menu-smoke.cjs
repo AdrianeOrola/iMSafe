@@ -53,6 +53,13 @@ const restoreRateLimits = () => rateSnapshots.forEach((content, target) => {
       await fetch('account.php', { method: 'POST', body, redirect: 'manual' });
     }, { csrf, password: adminPassword, email: adminEmail });
   };
+  const selectFirstLocation = async id => {
+    await page.waitForFunction(elementId => {
+      const select = document.getElementById(elementId);
+      return select && !select.disabled && select.options.length > 1;
+    }, id);
+    await page.locator(`#${id}`).selectOption({ index: 1 });
+  };
   try {
     await page.goto(base + 'dashboard.php');
     assert.ok(page.url().includes('account.php?mode=login'));
@@ -71,12 +78,45 @@ const restoreRateLimits = () => rateSnapshots.forEach((content, target) => {
     await page.fill('#accountEmail', email);
     await page.fill('#accountPassword', password);
     await page.fill('#confirmPassword', password);
+    await page.waitForFunction(() => document.getElementById('signupRegion')?.querySelector('option[value="0400000000"]'));
+    await page.locator('#signupRegion').selectOption('0400000000');
+    await page.waitForFunction(() => document.getElementById('signupProvince')?.querySelector('option[value="0402100000"]'));
+    await page.locator('#signupProvince').selectOption('0402100000');
+    await page.waitForFunction(() => document.getElementById('signupMunicipality')?.querySelector('option[value="0402103000"]'));
+    await page.locator('#signupMunicipality').selectOption('0402103000');
+    await selectFirstLocation('signupBarangay');
+    const profileLocation = {
+      region: await page.locator('#signupRegion').inputValue(),
+      province: await page.locator('#signupProvince').inputValue(),
+      municipality: await page.locator('#signupMunicipality').inputValue(),
+      barangay: await page.locator('#signupBarangay').inputValue(),
+    };
+    await page.fill('#houseStreet', '42 Testing Street');
+    await page.fill('#nearbyLandmark', 'Community hall');
+    await page.fill('#primaryContact', '09171234567');
+    await page.fill('#alternateContact', '09181234567');
     await page.getByRole('button', { name: 'Create account' }).click();
-    await page.waitForURL(/index\.php\?account=created/);
+    try {
+      await page.waitForURL(/index\.php\?account=created/);
+    } catch (error) {
+      const messages = await page.locator('.form-error, .notice.error, [role="alert"]').allInnerTexts();
+      throw new Error(`Account creation did not complete: ${messages.join(' | ') || 'no visible validation message'}`, { cause: error });
+    }
     assert.equal(await page.locator('.account-name').innerText(), displayName);
     assert.ok(!/Logout|Admin sign out|Operations/.test(await page.locator('#primary-navigation').innerText()));
     assert.equal(await page.locator('#primary-navigation a[href="announcements.php"]').count(), 1);
     assert.equal(await page.locator('#primary-navigation a[href="dashboard.php"]').count(), 0);
+    await page.goto(base + 'report.php');
+    await page.waitForFunction(expected => document.getElementById('barangay')?.value === expected, profileLocation.barangay);
+    assert.equal(await page.locator('#region').inputValue(), profileLocation.region);
+    assert.equal(await page.locator('#province').inputValue(), profileLocation.province);
+    assert.equal(await page.locator('#municipality').inputValue(), profileLocation.municipality);
+    assert.equal(await page.locator('#houseNumber').inputValue(), '42 Testing Street');
+    assert.equal(await page.locator('#nearbyLandmark').inputValue(), 'Community hall');
+    assert.equal(await page.locator('#contactNumber').inputValue(), '09171234567');
+    assert.equal(await page.locator('#alternateContact').inputValue(), '09181234567');
+    assert.equal(await page.locator('#reporterName').inputValue(), displayName);
+    assert.equal(await page.locator('#email').inputValue(), email);
     await page.locator('.account-menu summary').click();
     assert.ok(await page.getByRole('button', { name: 'Sign out' }).isVisible());
     await page.keyboard.press('Escape');
@@ -119,7 +159,7 @@ const restoreRateLimits = () => rateSnapshots.forEach((content, target) => {
     assert.equal(await page.locator('.account-name').innerText(), displayName);
     await page.locator('.account-menu summary').click();
     await page.screenshot({ path: path.join(out, 'community-account-menu-mobile.png') });
-    console.log('PASS: one email/password login for community and admin, mutually exclusive roles, chosen-name menu, menu-only sign out, desktop/mobile navigation.');
+    console.log('PASS: profile-backed signup, report autofill, one email/password login for community and admin, mutually exclusive roles, chosen-name menu, menu-only sign out, desktop/mobile navigation.');
   } finally {
     if (browser) await browser.close();
     server.kill();

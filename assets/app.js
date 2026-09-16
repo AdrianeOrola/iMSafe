@@ -7,25 +7,16 @@ const profile = {
   Orange: { color: 'orange', hint: 'Orange protocol applied: document areas of concern and preparedness needs.', impacts: ['Moderate community disruption', 'Partial access limitation', 'Services disrupted', 'Localized households affected'], situations: ['Hazard conditions increasing', 'Access is limited in parts of the area', 'Community is preparing to evacuate', 'Response team assessment needed'], needs: ['Food & water', 'Medical assistance', 'Temporary shelter', 'Communication support', 'Road clearing'], defaults: { impact: '', situation: '', description: '' } },
   Red: { color: 'red', hint: 'Red protocol applied: capture urgent life-safety and response requirements.', impacts: ['Critical life-safety risk', 'Widespread household impact', 'Evacuation required', 'Major infrastructure disruption'], situations: ['People are in immediate danger', 'Evacuation is actively required', 'Road access is blocked', 'Rescue resources are required'], needs: ['Rescue team', 'Medical assistance', 'Evacuation transport', 'Food & water', 'Emergency shelter', 'Power and communications'], defaults: { impact: '', situation: '', description: '' } },
 };
-const particulars = {
-  Flood: ['Flash flood', 'River flooding', 'Coastal flooding', 'Urban or street flooding', 'Dam or levee-related flooding'],
-  'Tropical Cyclone': ['Strong winds', 'Storm surge', 'Heavy rainfall', 'Rain-induced flooding'],
-  Landslide: ['Rain-induced landslide', 'Rockfall', 'Mudflow or debris flow', 'Slope collapse', 'Earthquake-induced landslide'],
-  Thunderstorm: ['Lightning', 'Severe wind gusts', 'Hail', 'Intense rainfall'],
-  Earthquake: ['Ground shaking', 'Building damage or collapse', 'Ground rupture', 'Liquefaction', 'Aftershock impacts'],
-  'Volcanic Eruption': ['Ashfall', 'Lava flow', 'Pyroclastic flow', 'Lahar', 'Volcanic gas'],
-  Tsunami: ['Coastal inundation', 'Rapid sea-level change', 'Strong coastal currents', 'Wave damage'],
-  Fire: ['Residential fire', 'Commercial fire', 'Electrical fire', 'Industrial fire', 'Vehicle fire'],
-  Wildfire: ['Forest fire', 'Grass fire', 'Brush fire'],
-  'Hazardous Material Incident': ['Chemical spill', 'Gas leak', 'Fuel spill', 'Unknown hazardous substance'],
-};
+const disasterCatalog = window.imSafeDisasterCatalog || { groups: {}, disasters: {} };
 
 const form = byId('rapidForm');
 if (form) {
+  const disasterGroup = byId('disasterGroup');
   const specific = byId('specificType');
   const particularType = byId('particularType');
+  const situationSection = byId('situationSection');
+  const situationFields = byId('situationFields');
   const rapid = byId('rapidSection');
-  const flood = byId('floodSection');
   const selects = ['region', 'province', 'municipality', 'barangay'].map(byId);
   const names = ['regionName', 'provinceName', 'municipalityName', 'barangayName'].map(byId);
   const actions = ['regions', 'provinces', 'municipalities', 'barangays'];
@@ -63,6 +54,16 @@ if (form) {
   let revision = 0;
   let failedLevel = null;
   let legendDraft = { impact: '', situation: '', description: '', needs: [] };
+  let situationDraft = {};
+
+  const selectedLegend = () => form.querySelector('[name="legend"]:checked')?.value || '';
+  const collectSituationValues = () => {
+    const values = {};
+    situationFields.querySelectorAll('[name]').forEach(input => {
+      values[input.name] = input.type === 'checkbox' ? (input.checked ? '1' : '0') : input.value;
+    });
+    return values;
+  };
 
   const fill = (select, values, prompt) => {
     select.replaceChildren(new Option(prompt, ''));
@@ -76,26 +77,108 @@ if (form) {
   };
   const readyText = () => {
     const missing = [];
-    if (!form.querySelector('[name="legend"]:checked')) missing.push('community status');
-    if (!specific.value || !particularType.value) missing.push('hazard');
+    const statusReady = Boolean(selectedLegend());
+    if (!statusReady) missing.push('community status');
+    const disasterReady = disasterGroup.value && specific.value && particularType.value;
+    if (!disasterReady) missing.push('disaster and observed effect');
     const locationReady = selects.every(select => !select.disabled && select.value);
     if (!locationReady) missing.push('exact location');
-    submit.disabled = requests.size > 0 || !locationReady;
+    submit.disabled = requests.size > 0 || !statusReady || !locationReady || !disasterReady;
     byId('readyText').textContent = requests.size ? 'Loading location choices. You can keep filling in the other sections.'
       : missing.length ? 'Select ' + missing.join(', ') + ' to continue.'
       : form.querySelector(':invalid') ? 'Complete the required assessment fields before submitting.'
       : 'Your required details are complete. Review your answers, then submit.';
   };
-  const updateFlood = () => {
-    const active = specific.value === 'Flood';
-    flood.hidden = !active;
-    flood.querySelectorAll('input, select').forEach(input => { input.disabled = !active; });
-    ['waterLevel', 'waterTrend', 'roadPassability'].forEach(id => { byId(id).required = active; });
+
+  const fieldId = key => key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+  const optionValue = option => typeof option === 'object' ? option.value : option;
+  const optionLabel = option => typeof option === 'object' ? option.label : option;
+  const renderSituationFields = (restoring = false, draft = null) => {
+    const definition = disasterCatalog.disasters[specific.value];
+    const legend = selectedLegend();
+    situationFields.replaceChildren();
+    if (!definition || !legend) {
+      situationSection.hidden = false;
+      rapid.hidden = true;
+      if (legend) situationSection.dataset.legend = legend.toLowerCase();
+      else delete situationSection.dataset.legend;
+      byId('situationSummary').textContent = legend
+        ? `The ${legend} status is active. Choose a disaster to load its matching condition questions.`
+        : 'Choose the community status first, then select the disaster to unlock these questions.';
+      return;
+    }
+    situationSection.hidden = false;
+    rapid.hidden = false;
+    situationSection.dataset.legend = legend.toLowerCase();
+    byId('situationSummary').textContent = `${legend} status is active for ${specific.value}. Choose the actual condition from the ${legend.toLowerCase()}-focused options.`;
+    const answers = draft || (restoring ? savedReport : situationDraft);
+    for (const question of definition.questions || []) {
+      const id = fieldId(question.key);
+      if (question.type === 'checkbox') {
+        const wrapper = document.createElement('label');
+        wrapper.className = 'situation-check';
+        const input = document.createElement('input');
+        input.type = 'checkbox'; input.id = id; input.name = question.key; input.value = '1';
+        input.checked = ['1', 'true', 'on', 'yes'].includes(String(answers[question.key] ?? '').toLowerCase());
+        wrapper.append(input, document.createTextNode(question.label));
+        situationFields.append(wrapper);
+        continue;
+      }
+
+      const label = document.createElement('label');
+      label.htmlFor = id;
+      label.append(document.createTextNode(question.label));
+      let input;
+      if (question.type === 'select') {
+        input = document.createElement('select');
+        input.append(new Option(`${legend} status — select ${question.label.toLowerCase()}`, ''));
+        const options = question.legendOptions?.[legend] || question.options || [];
+        for (const option of options) input.add(new Option(optionLabel(option), optionValue(option)));
+      } else {
+        input = document.createElement('input');
+        input.type = question.type === 'number' ? 'number' : 'text';
+        if (question.min !== undefined) input.min = question.min;
+        if (question.max !== undefined) input.max = question.max;
+        if (question.step !== undefined) input.step = question.step;
+        if (question.maxLength !== undefined) input.maxLength = question.maxLength;
+        if (question.placeholder) input.placeholder = question.placeholder;
+      }
+      input.id = id; input.name = question.key; input.required = Boolean(question.required);
+      const restored = answers[question.key];
+      if (restored !== undefined && restored !== null) input.value = String(restored);
+      else if (question.default !== undefined) input.value = String(question.default);
+      label.append(input);
+      if (question.help || question.type === 'select') {
+        const help = document.createElement('small');
+        const statusHelp = question.legendSensitive
+          ? `${legend} status options are shown. Change the community status to update these choices.`
+          : `${legend} status is active. Record the actual measurement or observation.`;
+        help.className = 'measurement-note legend-adaptive-note'; help.id = `${id}Help`; help.textContent = [question.help, statusHelp].filter(Boolean).join(' ');
+        input.setAttribute('aria-describedby', help.id);
+        label.append(help);
+      }
+      situationFields.append(label);
+    }
     readyText();
+  };
+  const updateDisaster = (restoring = false) => {
+    const definition = disasterCatalog.disasters[specific.value];
+    fill(particularType, definition?.effects || [], specific.value ? 'Select observed effect' : 'Select particular disaster first');
+    particularType.disabled = !definition;
+    if (restoring) choose(particularType, savedReport.particular_type);
+    renderSituationFields(restoring);
+    readyText();
+  };
+  const updateDisasterGroup = (restoring = false) => {
+    fill(specific, disasterCatalog.groups[disasterGroup.value] || [], disasterGroup.value ? 'Select particular disaster' : 'Select disaster group first');
+    specific.disabled = !disasterGroup.value;
+    if (restoring) choose(specific, savedReport.specific_type);
+    updateDisaster(restoring);
   };
   const setLegend = (legend, restoring = false) => {
     const current = profile[legend];
     if (!current) return;
+    if (specific.value && !restoring) situationDraft = collectSituationValues();
     if (!byId('reporterDescription').disabled && !restoring) {
       legendDraft = {
         impact: byId('impactDetail').value,
@@ -110,6 +193,8 @@ if (form) {
       needs: Array.isArray(savedReport.needs) ? savedReport.needs : []
     } : legendDraft;
     rapid.hidden = false;
+    disasterGroup.disabled = false;
+    form.dataset.legend = current.color;
     byId('legendHint').textContent = current.hint;
     byId('legendHint').className = 'legend-hint ' + current.color;
     byId('protocolLabel').textContent = 'Choices are configured for the ' + legend + ' protocol.';
@@ -129,6 +214,7 @@ if (form) {
       label.append(input, document.createTextNode(need));
       return label;
     }));
+    renderSituationFields(restoring, restoring ? savedReport : situationDraft);
     readyText();
   };
 
@@ -212,11 +298,8 @@ if (form) {
     retry.disabled = false;
   });
   form.querySelectorAll('[name="legend"]').forEach(input => input.addEventListener('change', () => setLegend(input.value)));
-  specific.addEventListener('change', () => {
-    fill(particularType, particulars[specific.value] || [], specific.value ? 'Select particular incident' : 'Select disaster first');
-    particularType.disabled = !specific.value;
-    updateFlood();
-  });
+  disasterGroup.addEventListener('change', () => { situationDraft = {}; updateDisasterGroup(); });
+  specific.addEventListener('change', () => { situationDraft = {}; updateDisaster(); });
   particularType.addEventListener('change', readyText);
   form.addEventListener('input', readyText);
   form.addEventListener('change', readyText);
@@ -374,16 +457,11 @@ if (form) {
   window.addEventListener('pageshow', readyText);
 
   ['impactDetail', 'currentSituation', 'reporterDescription'].forEach(id => { byId(id).disabled = true; });
+  disasterGroup.disabled = true;
   const legend = savedReport.legend || form.querySelector('[name="legend"]:checked')?.value;
   if (legend) setLegend(legend, true);
-  if (savedReport.specific_type) {
-    choose(specific, savedReport.specific_type);
-    fill(particularType, particulars[specific.value] || [], 'Select particular incident');
-    particularType.disabled = !specific.value;
-    choose(particularType, savedReport.particular_type);
-  }
-  updateFlood();
-  for (const [key, id] of Object.entries({ water_level: 'waterLevel', water_trend: 'waterTrend', road_passability: 'roadPassability' })) choose(byId(id), savedReport[key]);
+  if (savedReport.general_type) choose(disasterGroup, savedReport.general_type);
+  updateDisasterGroup(true);
   resetFrom(0);
   void continueCascade(0, true);
 }

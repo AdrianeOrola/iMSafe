@@ -23,7 +23,7 @@ This package is a **standalone PHP 8.2+ and MySQL/MariaDB application** for loca
 ## Local Setup
 
 1. Copy `imsafe-php-localhost` into your XAMPP `htdocs` folder or any PHP server directory.
-2. Start **Apache** and **MySQL** in XAMPP. Import `schema.sql` through phpMyAdmin, or run `mysql -u root -p < schema.sql` in this folder. This creates the `imsafe_oop_local` database and the eight normalized application tables. If upgrading an existing installation, run `migrations/001_add_incident_user.sql` once, then `migrations/002_add_province.sql`. The second migration is additive and preserves existing records (MariaDB). On MySQL, check for the two columns first and use `ADD COLUMN` without `IF NOT EXISTS` if your version does not support it.
+2. Start **Apache** and **MySQL** in XAMPP. Import `schema.sql` through phpMyAdmin, or run `mysql -u root -p < schema.sql` in this folder. This creates the `imsafe_oop_local` database and the eight normalized application tables. If upgrading an existing installation, run `migrations/001_add_incident_user.sql`, `migrations/002_add_province.sql`, then `migrations/003_add_local_user_profile.sql` once. The migrations are additive and preserve existing records (MariaDB). On MySQL, check for the columns first and use `ADD COLUMN` without `IF NOT EXISTS` if your version does not support it.
 3. Configure a dedicated MySQL user. Example:
 
    ```sql
@@ -72,7 +72,7 @@ The report is **not** stored in a single table. The primary `incidents` record o
 | Table | Purpose |
 | --- | --- |
 | `incidents` | Report identity, reference code, reporter contact, hazard, legend, narrative, and status. |
-| `local_users` | Local community account identity, unique email, password hash, and sign-in timestamp. |
+| `local_users` | Local community account identity, password hash, saved PSGC location codes, contact details, and sign-in timestamp. |
 | `incident_locations` | Region, optional province, municipality/city, barangay, house/street, and landmark. |
 | `rapid_assessments` | Assessment color, condition, narrative, alternate contact, email, and evidence note. |
 | `assessment_needs` | One selected rapid-response need per row. |
